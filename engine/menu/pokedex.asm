@@ -197,6 +197,13 @@ HandlePokedexListMenu:
 	coord hl, 16, 10
 	ld de, PokedexMenuItemsText
 	call PlaceString
+	ld a, $31
+	lb bc, 10, 3
+	coord hl, 16, 7
+	call DFSStaticize
+	lb bc, 5, 3
+	coord hl, 15, 0
+	call DFSStaticize
 ; find the highest pokedex number among the pokemon the player has seen
 	ld hl, wPokedexSeenEnd - 1
 	ld b, (wPokedexSeenEnd - wPokedexSeen) * 8 + 1

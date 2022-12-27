@@ -1189,7 +1189,7 @@ SquirtleDexEntry:
 	; TX_FAR _SquirtleDexEntry
 	; db "@"
 	db "小龟宝可梦@"
-	db 98,70
+	db 98,7
 	dw 9780
 	TX_FAR _SquirtleDexEntry
 	db "@"

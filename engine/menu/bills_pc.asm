@@ -1,31 +1,31 @@
-ClearBillPCMenuMain_CHS:
-	coord hl, 2, 1
-	ld b, 10
-	ld c, 9
-	call ClearScreenArea
-	ret
+ClearBillPCMenuMain_CHS: ;
+	coord hl, 2, 1 ;
+	ld b, 10 ;
+	ld c, 9 ;
+	call ClearScreenArea ;
+	ret ;
 
 ClearBillPCMenuSub_CHS: ;CHS_FIX 04 for refreshing the screen after looking at stat from bill's pc
-	coord hl, 6, $0A
-	ld b, 1
-	ld c, 3
-	call ClearScreenArea
-	coord hl, 6, $9
-	ld b, 1
-	ld c, 9
-	call ClearScreenArea
-	coord hl, 1, 13
-	ld b, 2
-	ld c, 8
-	call ClearScreenArea
-	ret
+	coord hl, 6, $0A ;
+	ld b, 1 ;
+	ld c, 3 ;
+	call ClearScreenArea ;
+	coord hl, 6, $9 ;
+	ld b, 1 ;
+	ld c, 9 ;
+	call ClearScreenArea ;
+	coord hl, 1, 13 ;
+	ld b, 2 ;
+	ld c, 8 ;
+	call ClearScreenArea ;
+	ret ;
 
 ClearBillPCMenuSub1_CHS: ;CHS_FIX 04 for refreshing the screen after looking at stat from bill's pc
-	coord hl, 6, 3
-	ld b, 9
-	ld c, 13
-	call ClearScreenArea
-	ret
+	coord hl, 6, 3 ;
+	ld b, 9 ;
+	ld c, 13 ;
+	call ClearScreenArea ;
+	ret ;
 
 DisplayPCMainMenu::
 	xor a
@@ -505,9 +505,9 @@ DisplayDepositWithdrawMenu:
 	ret
 .viewStats
 	ld a, $31 ; CHS_Fix 04 push text to stack
-	lb bc, 6, 8
-	coord hl, 6, 3
-	call DFSStaticize
+	lb bc, 6, 8 ;
+	coord hl, 6, 3 ;
+	call DFSStaticize ;
 	call SaveScreenTilesToBuffer1
 	ld a, [wParentMenuItem]
 	and a

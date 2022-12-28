@@ -1820,7 +1820,8 @@ PrintListMenuEntries::
 	ld [wLoadedMonLevel], a
 .skipCopyingLevel
 	pop hl
-	ld bc, $001c
+	; ld bc, $001c ; Box level coordinates
+	ld bc, $0008
 	add hl, bc
 	call PrintLevel
 	pop af
@@ -1956,12 +1957,12 @@ GetMachineName::
 	add 5
 	ld [wd11e], a
 	ld hl, HiddenPrefix ; points to "HM"
-	ld bc, 8 ;ld bc, 2
+	ld bc, 2 ;ld bc, 2
 	jr .WriteMachinePrefix
 .WriteTM
 	ld hl, TechnicalPrefix ; points to "TM"
 	; ld bc, 2
-	ld bc, 8
+	ld bc, 2
 .WriteMachinePrefix
 	ld de, wcd6d
 	call CopyData
@@ -1996,14 +1997,14 @@ GetMachineName::
 	ret
 
 TechnicalPrefix::
-	; db "TM"
+	db "TM"
 	; db "招式学习"
 	; db $01,$4B,$01,$4C,$01,$4D
-	db $01,$4C,$01,$4D,$01,$4E,$01,$4F
+	; db $01,$4C,$01,$4D,$01,$4E,$01,$4F
 HiddenPrefix::
-	; db "HM"
+	db "HM"
 	; db "秘传学习器"
-	db $01,$50,$01,$51,$01,$4E,$01,$4F
+	; db $01,$50,$01,$51,$01,$4E,$01,$4F
 
 ; sets carry if item is HM, clears carry if item is not HM
 ; Input: a = item ID

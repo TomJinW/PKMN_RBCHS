@@ -1,3 +1,6 @@
+; DebugText_CHS::
+; 	TX_FAR _DebugText_CHS
+
 BattleCore:
 
 ; These are move effects (second value from the Moves table in bank $E).
@@ -2328,6 +2331,7 @@ OldManItemList:
 	db -1
 
 DisplayPlayerBag:
+
 	; get the pointer to player's bag when in a normal battle
 	ld hl, wNumBagItems
 	ld a, l
@@ -2336,6 +2340,7 @@ DisplayPlayerBag:
 	ld [wListPointer + 1], a
 
 DisplayBagMenu:
+	
 	xor a
 	ld [wPrintItemPrices], a
 	ld a, ITEMLISTMENU
@@ -2358,7 +2363,21 @@ UseBagItem:
 	call CopyStringToCF4B ; copy name
 	xor a
 	ld [wPseudoItemID], a
+
+	ld a, 0 ; CHS_FIX 00 for opening party menu using items
+	ld [wIfPartyMenuOpenedDuringBattle], a ;
+	ld a, [wPseudoItemID] ;
+	
 	call UseItem
+
+	ld [wTempSpace], a ; CHS_FIX 00 for opening party menu using items
+	ld a,[wIfPartyMenuOpenedDuringBattle] ;
+	cp 1 ;
+	jr nz, .skipResettingMonSprite ;
+	call ReloadMonPic ;
+.skipResettingMonSprite ;
+	ld a,[wTempSpace] ;
+
 	call LoadHudTilePatterns
 	call ClearSprites
 	xor a
@@ -2432,6 +2451,7 @@ PartyMenuOrRockOrRun:
 .checkIfPartyMonWasSelected
 	jp nc, .partyMonWasSelected ; if a party mon was selected, jump, else we quit the party menu
 .quitPartyMenu
+	
 	call ClearSprites
 	call GBPalWhiteOut
 	call LoadHudTilePatterns
@@ -2439,6 +2459,7 @@ PartyMenuOrRockOrRun:
 	call RunDefaultPaletteCommand
 	call ReloadMonPic
 	call GBPalNormal
+	
 	jp DisplayBattleMenu
 .partyMonDeselected
 	coord hl, 11, 10

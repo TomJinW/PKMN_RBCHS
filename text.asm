@@ -24,6 +24,10 @@ INCLUDE "hram.asm"
 
 SECTION "Text 1", ROMX ; BANK $20
 
+_DebugText_CHS::
+	text "BP"
+	; done
+	
 _CardKeySuccessText1::
 	text "Bingo!@@"
 

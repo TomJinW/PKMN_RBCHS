@@ -3215,6 +3215,8 @@ wc0f4:: ds 1
 wc0f5:: ds 11
 ds 24	
 
+wIfPartyMenuOpenedDuringBattle:: ds 1
+wTempSpace:: ds 1
 SECTION "Stack", WRAM0
 wStack:: ; dfff
 

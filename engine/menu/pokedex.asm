@@ -605,7 +605,7 @@ HeightWeightText:
 	; db   "高  ?", $60, "??", $61
 	; next "重   ???kg@"
 	db   "身高  ?","??",$61
-	next"体重  ???",$01,$4B,"@"
+	next"体重  ???",$2E,$B9,"@"
 
 ; XXX does anything point to this?
 PokeText:

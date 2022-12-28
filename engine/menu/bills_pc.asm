@@ -1,3 +1,32 @@
+ClearBillPCMenuMain_CHS:
+	coord hl, 2, 1
+	ld b, 10
+	ld c, 9
+	call ClearScreenArea
+	ret
+
+ClearBillPCMenuSub_CHS: ;CHS_FIX 04 for refreshing the screen after looking at stat from bill's pc
+	coord hl, 6, $0A
+	ld b, 1
+	ld c, 3
+	call ClearScreenArea
+	coord hl, 6, $9
+	ld b, 1
+	ld c, 9
+	call ClearScreenArea
+	coord hl, 1, 13
+	ld b, 2
+	ld c, 8
+	call ClearScreenArea
+	ret
+
+ClearBillPCMenuSub1_CHS: ;CHS_FIX 04 for refreshing the screen after looking at stat from bill's pc
+	coord hl, 6, 3
+	ld b, 9
+	ld c, 13
+	call ClearScreenArea
+	ret
+
 DisplayPCMainMenu::
 	xor a
 	ld [H_AUTOBGTRANSFERENABLED], a
@@ -125,7 +154,7 @@ BillsPCMenu:
 	lb bc, BANK(PokeballTileGraphics), $01
 	call CopyVideoData
 	call LoadScreenTilesFromBuffer2DisableBGTransfer
-	
+	call ReloadTilesetTilePatterns ;CHS_Fix 04
 	; coord hl, 0, 0
 	; ld b, 10
 	; ld c, 12
@@ -224,13 +253,6 @@ ExitBillsPC:
 	ld [wListScrollOffset], a
 	ld hl, wd730
 	res 6, [hl]
-	ret
-
-ClearBillPCMenuMain_CHS:
-	coord hl, 2, 1
-	ld b, 10
-	ld c, 9
-	call ClearScreenArea
 	ret
 
 BillsPCDeposit:
@@ -424,17 +446,8 @@ HMMoveArray:
 	db -1
 
 
-ClearBillPCMenuSub_CHS:
-	coord hl, 5, 3
-	ld b, 9
-	ld c, 14
-	call ClearScreenArea
-	coord hl, 1, 13
-	ld b, 2
-	ld c, 8
-	call ClearScreenArea
-	
-DisplayDepositWithdrawMenu:
+
+LoadSubMenuOptionString_CHS: ; CHS_Fix 04
 	coord hl, 9, 10
 	ld b, 6
 	ld c, 9
@@ -442,14 +455,19 @@ DisplayDepositWithdrawMenu:
 	ld a, [wParentMenuItem]
 	and a ; was the Deposit or Withdraw item selected in the parent menu?
 	ld de, DepositPCText
-	jr nz, .next
+	jr nz, .finish
 	ld de, WithdrawPCText
-.next
+.finish
 	coord hl, 11, 12
 	call PlaceString
 	coord hl, 11, 14
 	ld de, StatsCancelPCText
 	call PlaceString
+	ret
+
+DisplayDepositWithdrawMenu:
+	call LoadSubMenuOptionString_CHS
+.next
 	ld hl, wTopMenuItemY
 	ld a, 12
 	ld [hli], a ; wTopMenuItemY
@@ -470,6 +488,7 @@ DisplayDepositWithdrawMenu:
 	ld [wPlayerMonNumber], a
 	ld [wPartyAndBillsPCSavedMenuItem], a
 .loop
+	call LoadSubMenuOptionString_CHS ; CHS_Fix 04 Reload Sub Menu
 	call HandleMenuInput
 	bit 1, a ; pressed B?
 	jr nz, .exit
@@ -485,6 +504,10 @@ DisplayDepositWithdrawMenu:
 	scf
 	ret
 .viewStats
+	ld a, $31 ; CHS_Fix 04 push text to stack
+	lb bc, 6, 8
+	coord hl, 6, 3
+	call DFSStaticize
 	call SaveScreenTilesToBuffer1
 	ld a, [wParentMenuItem]
 	and a
@@ -496,17 +519,29 @@ DisplayDepositWithdrawMenu:
 	predef StatusScreen
 	predef StatusScreen2
 	call LoadScreenTilesFromBuffer1
+
+	ld a,1 ; CHS_Fix 04 recover single tile
+	ld [wTempSpace],a
 	call ReloadTilesetTilePatterns
+	ld a,0
+	ld [wTempSpace],a
+
 	call RunDefaultPaletteCommand
 	call LoadGBPal
 	call ClearBillPCMenuSub_CHS
 	jr .loop
 
-DepositPCText:  db "DEPOSIT@"
-WithdrawPCText: db "WITHDRAW@"
+; DepositPCText:  db "DEPOSIT@"
+; WithdrawPCText: db "WITHDRAW@"
+; StatsCancelPCText:
+; 	db   "STATS"
+; 	next "CANCEL@"
+
+DepositPCText:  db "寄放@"
+WithdrawPCText: db "取走@"
 StatsCancelPCText:
-	db   "STATS"
-	next "CANCEL@"
+	db   "查看能力"
+	next "取消@"
 
 SwitchOnText:
 	TX_FAR _SwitchOnText

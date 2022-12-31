@@ -373,8 +373,10 @@ PrintStatsBox:
 	ld b, 8
 	ld c, 9
 	call TextBoxBorder
-	coord hl, 11, 3
-	ld bc, $0018
+	; coord hl, 11, 3
+	coord hl, 11, 4
+	; ld bc, $0018
+	ld bc, $0004
 .PrintStats
 	push bc
 	push hl

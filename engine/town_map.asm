@@ -258,7 +258,8 @@ LoadTownMap_Fly:
 	jr .pressedDown
 
 ToText:
-	db "To@"
+	; db "To@"
+	db "飞往@"
 
 BuildFlyLocationsList:
 	ld hl, wFlyLocationsList - 1

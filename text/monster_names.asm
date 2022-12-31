@@ -227,6 +227,7 @@ MonsterNames:
 	db "大岩蛇@@@@"
 	db "大嘴雀@@@@"
 	db "波波@@@@@@"
+	; db "AAAAAAAAAA"
 	db "呆呆兽@@@@"
 	db "勇基拉@@@@"
 	db "隆隆石@@@@"

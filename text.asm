@@ -1594,8 +1594,10 @@ _PartyMenuBattleText::
 	done
 
 _PartyMenuUseTMText::
-	text "Use TM on which"
-	line "#MON?"
+	; text "Use TM on which"
+	; line "#MON?"
+	; done
+	text "要对哪只宝可梦使用？"
 	done
 
 _PartyMenuSwapMonText::
@@ -1776,8 +1778,11 @@ _SwitchOnText::
 	text "Switch on!"
 	prompt
 
+; _WhatText::
+; 	text "What?"
+; 	done
 _WhatText::
-	text "What?"
+	text "要做什么？"
 	done
 
 _DepositWhichMonText::
@@ -2971,17 +2976,26 @@ _TeachMachineMoveText::
 	done
 
 _MonCannotLearnMachineMoveText::
+	; TX_RAM wcd6d
+	; text " is not"
+	; line "compatible with"
+	; cont "@"
+	; TX_RAM wcf4b
+	; text "."
 	TX_RAM wcd6d
-	text " is not"
-	line "compatible with"
-	cont "@"
+	text ""
+	line "和@"
 	TX_RAM wcf4b
-	text "."
+	text "不匹配！"
 
-	para "It can't learn"
-	line "@"
+	; para "It can't learn"
+	; line "@"
+	; TX_RAM wcf4b
+	; text "."
+	para "@"
 	TX_RAM wcf4b
-	text "."
+	text ""
+	line "是学不会的！"
 	prompt
 
 _ItemUseNotTimeText::
@@ -2996,8 +3010,9 @@ _ItemUseNotYoursToUseText::
 	prompt
 
 _ItemUseNoEffectText::
-	text "It won't have any"
-	line "effect."
+	; text "It won't have any"
+	; line "effect."
+	text "即便使用也无效果哦。"
 	prompt
 
 _ThrowBallAtTrainerMonText1::

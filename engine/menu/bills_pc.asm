@@ -1,3 +1,6 @@
+WhatText_CHS::
+	db "要做什么？@"
+
 ClearBillPCMenuMain_CHS: ;
 	coord hl, 2, 1 ;
 	ld b, 10 ;
@@ -14,17 +17,21 @@ ClearBillPCMenuSub_CHS: ;CHS_FIX 04 for refreshing the screen after looking at s
 	ld b, 1 ;
 	ld c, 9 ;
 	call ClearScreenArea ;
-	coord hl, 1, 13 ;
-	ld b, 2 ;
-	ld c, 8 ;
-	call ClearScreenArea ;
+	; coord hl, 1, 13 ;
+	; ld b, 2 ;
+	; ld c, 8 ;
+	; call ClearScreenArea ;
 	ret ;
 
 ClearBillPCMenuSub1_CHS: ;CHS_FIX 04 for refreshing the screen after looking at stat from bill's pc
-	coord hl, 6, 3 ;
-	ld b, 9 ;
-	ld c, 13 ;
-	call ClearScreenArea ;
+	; coord hl, 6, 3 ;
+	; ld b, 9 ;
+	; ld c, 13 ;
+	; call ClearScreenArea ;
+	; coord hl, 1, 13 ;
+	; ld b, 2 ;
+	; ld c, 8 ;
+	; call ClearScreenArea ;
 	ret ;
 
 DisplayPCMainMenu::
@@ -154,7 +161,7 @@ BillsPCMenu:
 	lb bc, BANK(PokeballTileGraphics), $01
 	call CopyVideoData
 	call LoadScreenTilesFromBuffer2DisableBGTransfer
-	call ReloadTilesetTilePatterns ;CHS_Fix 04
+	; call ReloadTilesetTilePatterns ;CHS_Fix 04
 	; coord hl, 0, 0
 	; ld b, 10
 	; ld c, 12
@@ -198,8 +205,9 @@ BillsPCMenu:
 	ld hl, WhatText
 	call PrintText
 	coord hl, 9, 14
+	coord hl, $0D, 14
 	ld b, 2
-	ld c, 9
+	ld c, 5
 	call TextBoxBorder
 	ld a, [wCurrentBoxNum]
 	and $7f
@@ -214,8 +222,16 @@ BillsPCMenu:
 .singleDigitBoxNum
 	add "1"
 .next
+	ld [wTempSpace],a
+	ld a, $01 ; CHS_Fix 04 push text to stack
+	lb bc, 2, 8 ;
+	coord hl, 2, 1 ;
+	call DFSStaticize ;
+	ld a,[wTempSpace]
+
 	Coorda 18, 16
-	coord hl, 10, 16
+	; coord hl, 10, 16
+	coord hl, 14, 16
 	ld de, BoxNoPCText
 	call PlaceString
 	ld a, 1
@@ -373,7 +389,7 @@ BillsPCRelease:
 	jp BillsPCMenu
 
 BillsPCChangeBox:
-	call ClearBillPCMenuMain_CHS
+	; call ClearBillPCMenuMain_CHS
 	callba ChangeBox
 	jp BillsPCMenu
 
@@ -408,7 +424,8 @@ BillsPCMenuText:
 	db "@"
 
 BoxNoPCText:
-	db "BOX No.@"
+	; db "BOX No.@"
+	db "盒子@"
 
 KnowsHMMove::
 ; returns whether mon with party index [wWhichPokemon] knows an HM move
@@ -488,6 +505,9 @@ DisplayDepositWithdrawMenu:
 	ld [wPlayerMonNumber], a
 	ld [wPartyAndBillsPCSavedMenuItem], a
 .loop
+	coord hl, 1, $0E ; CHS_Fix 04 recover single tile
+	ld de, WhatText_CHS ; CHS_Fix 04 recover single tile
+	call PlaceString ; CHS_Fix 04 recover single tile
 	call LoadSubMenuOptionString_CHS ; CHS_Fix 04 Reload Sub Menu
 	call HandleMenuInput
 	bit 1, a ; pressed B?
@@ -498,6 +518,7 @@ DisplayDepositWithdrawMenu:
 	dec a
 	jr z, .viewStats
 .exit
+	; call ClearBillPCMenuSub1_CHS
 	and a
 	ret
 .choseDepositWithdraw
@@ -508,6 +529,7 @@ DisplayDepositWithdrawMenu:
 	lb bc, 6, 8 ;
 	coord hl, 6, 3 ;
 	call DFSStaticize ;
+
 	call SaveScreenTilesToBuffer1
 	ld a, [wParentMenuItem]
 	and a
@@ -521,14 +543,17 @@ DisplayDepositWithdrawMenu:
 	call LoadScreenTilesFromBuffer1
 
 	ld a,1 ; CHS_Fix 04 recover single tile
-	ld [wTempSpace],a
-	call ReloadTilesetTilePatterns
-	ld a,0
-	ld [wTempSpace],a
+	ld [wTempSpace],a ;
+	call ReloadTilesetTilePatterns ;
+	ld a,0 ;
+	ld [wTempSpace],a ;
 
 	call RunDefaultPaletteCommand
 	call LoadGBPal
 	call ClearBillPCMenuSub_CHS
+
+
+
 	jr .loop
 
 ; DepositPCText:  db "DEPOSIT@"

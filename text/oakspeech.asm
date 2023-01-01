@@ -2,6 +2,9 @@ _OakSpeechText1::
 	text "Hello there!"
 	line "Welcome to the"
 	cont "world of #MON!"
+	; text "Tom祝各位"
+	; line "2023年新年快乐！"
+	; cont "world of #MON!"
 
 	para "My name is OAK!"
 	line "People call me"
